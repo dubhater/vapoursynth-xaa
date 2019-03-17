@@ -23,7 +23,7 @@ Parameters:
         The output width and height.
 
         Useful for when the video is going to be resized after
-        antialising.
+        antialiasing.
 
         Use a negative value for either to disable resizing after
         supersampling.

@@ -405,15 +405,15 @@ def edi_rpow2(clip, rfactorX=2, rfactorY=None, edi="znedi3", cshift="", fwidth=N
         
         # Image enlargement
         if edi == "znedi3":
-            p = edi_rpow2_znedi3(clip=p, rfactorX=rfactorX, rfactorY=rfactorY, alignc=alignc, planes=planes, nsize=nsize, nns=nns, qual=qual, etype=etype, pscrn=pscrn, opt=opt, int16_prescreener=int16_prescreener, int16_predictor=int16_predictor, exp=exp)
+            p = edi_rpow2_znedi3(clip=p, rfactorX=rfactorX, rfactorY=rfactorY, alignc=alignc, nsize=nsize, nns=nns, qual=qual, etype=etype, pscrn=pscrn, opt=opt, int16_prescreener=int16_prescreener, int16_predictor=int16_predictor, exp=exp)
         elif edi == "nnedi3cl":
-            p = edi_rpow2_nnedi3cl(clip=p, rfactorX=rfactorX, rfactorY=rfactorY, alignc=alignc, planes=planes, nsize=nsize, nns=nns, qual=qual, etype=etype, pscrn=pscrn)
+            p = edi_rpow2_nnedi3cl(clip=p, rfactorX=rfactorX, rfactorY=rfactorY, alignc=alignc, nsize=nsize, nns=nns, qual=qual, etype=etype, pscrn=pscrn)
         elif edi == "eedi3":
             emclip_p = emclip
             if emclip_p is not None:
                 emclip_p = core.std.ShufflePlanes(clips=emclip_p, planes=plane, colorfamily=vs.GRAY)
             
-            p = edi_rpow2_eedi3(clip=p, rfactorX=rfactorX, rfactorY=rfactorY, alignc=alignc, planes=planes, alpha=alpha, beta=beta, gamma=gamma, nrad=nrad, mdis=mdis, hp=hp, ucubic=ucubic, cost3=cost3, vcheck=vcheck, vthresh0=vthresh0, vthresh1=vthresh1, vthresh2=vthresh2, sclip=sclip, sclip_params=sclip_params, mclip=emclip_p, opt=opt, nnrep=nnrep)
+            p = edi_rpow2_eedi3(clip=p, rfactorX=rfactorX, rfactorY=rfactorY, alignc=alignc, alpha=alpha, beta=beta, gamma=gamma, nrad=nrad, mdis=mdis, hp=hp, ucubic=ucubic, cost3=cost3, vcheck=vcheck, vthresh0=vthresh0, vthresh1=vthresh1, vthresh2=vthresh2, sclip=sclip, sclip_params=sclip_params, mclip=emclip_p, opt=opt, nnrep=nnrep)
         elif edi == "eedi2":
             p = edi_rpow2_eedi2(clip=p, rfactorX=rfactorX, rfactorY=rfactorY, alignc=alignc, mthresh=mthresh, lthresh=lthresh, vthresh=vthresh, estr=estr, dstr=dstr, maxd=maxd, map=map, nt=nt, pp=pp)
             
@@ -524,8 +524,8 @@ def xaa(clip, ow=None, oh=None, ss=None, ssw=None, ssh=None, mode="sr SangNom", 
                 
         src_top[1] = src_top[1] / (1 << clip.format.subsampling_h)
             
-        src_left += src_left[1]
-        src_top += src_top[1]
+        src_left.append(src_left[1])
+        src_top.append(src_top[1])
             
         
         planes = [None, None, None]
@@ -575,7 +575,7 @@ def xaa(clip, ow=None, oh=None, ss=None, ssw=None, ssh=None, mode="sr SangNom", 
         mask = Default(mask, 0)
         chroma = Default(chroma, 1)
     elif mode in ["Mrdaa", "MrdaaLame"]:
-        mode = null
+        mode = "null"
         
         uscl = Default(uscl, "znedi3")
         csharp = Default(csharp, 2)
@@ -726,7 +726,7 @@ def xaa(clip, ow=None, oh=None, ss=None, ssw=None, ssh=None, mode="sr SangNom", 
     
     # Get the number of aa passes from the mode string
     if mode[0] in digits:
-        aa_pass = int(mode=[0])
+        aa_pass = int(mode[0])
         mode = mode[1:]
         
         if aa_pass == 0:
@@ -757,14 +757,16 @@ def xaa(clip, ow=None, oh=None, ss=None, ssw=None, ssh=None, mode="sr SangNom", 
     if aa_type == "eedi3" and len(mode) > 5:
         mode = mode[5:]
         
-    if mode[0] in mode_separators:
-        mode = mode[1:]
+        if mode[0] in mode_separators:
+            mode = mode[1:]
+            
+        aa_sclip = mode
         
-    aa_sclip = mode
-    
-    acceptable_aa_sclip = acceptable_dscl + ["SangNom", "znedi3", "nnedi3cl", "eedi2"]
-    if aa_sclip not in acceptable_aa_sclip:
-        raise ValueError("xaa: invalid mode string '{}': the antialiasing sclip type must be one of {}.".format(original_mode, acceptable_aa_sclip))
+        acceptable_aa_sclip = acceptable_dscl + ["SangNom", "znedi3", "nnedi3cl", "eedi2"]
+        if aa_sclip not in acceptable_aa_sclip:
+            raise ValueError("xaa: invalid mode string '{}': the antialiasing sclip type must be one of {}.".format(original_mode, acceptable_aa_sclip))
+    else:
+        aa_sclip = ""
     
     
     # Get the sclip setting for eedi3 upscaling from the uscl string
@@ -943,7 +945,7 @@ def xaa(clip, ow=None, oh=None, ss=None, ssw=None, ssh=None, mode="sr SangNom", 
         edi_params = dict(clip=clip_y8, rfactorX=rs1_rfacX, rfactorY=rs1_rfacY, edi=rs1_type, cplace=cplace,
                           alpha=eediA, beta=eediB, gamma=eediG, sclip=rs_sclip, mclip=rs12_mclip)
         if delay_cshift:
-            edi_params.update(dict(YV12cfix=false))
+            edi_params.update(dict(YV12cfix=False))
         else:
             edi_params.update(dict(cshift=rs1_cshift, fwidth=ssw, fheight=ssh))
             
@@ -1406,7 +1408,7 @@ def xaa(clip, ow=None, oh=None, ss=None, ssw=None, ssh=None, mode="sr SangNom", 
         if cstr < 0:
             aablur = core.rgvs.RemoveGrain(clip=rsaa, mode=[11, UVrg, UVrg])
         else:
-            aablur = rsaa.Blur(cstr * 0.2)
+            aablur = Blur(clip=rsaa, amount=cstr * 0.2)
         sharpdiff = core.std.MakeDiff(clipa=rsaa, clipb=aablur, planes=planes)
         repaired = core.rgvs.Repair(clip=sharpdiff, repairclip=aadiff, mode=[13, UVrp, UVrp])
         rsaa = core.std.MergeDiff(clipa=rsaa, clipb=repaired, planes=planes)
