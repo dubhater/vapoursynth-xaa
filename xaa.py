@@ -1437,7 +1437,7 @@ def xaa(clip, ow=None, oh=None, ss=None, ssw=None, ssh=None, mode="sr SangNom", 
     # 8-bit version of the rs2 clip for masking
     # TODO why can't you make the overlay in the same format as the input clip?
     # TODO okay, you can't do it in GRAY because it can't be green, but what's the reason to convert 422?
-    rs2_yv24 = rs2.resize.Bicubic(format=core.register_format(color_family=rs2.format.color_family,
+    rs2_yv24 = rs2.resize.Bicubic(format=core.register_format(color_family=vs.YUV,
                                                               sample_type=rs2.format.sample_type,
                                                               bits_per_sample=rs2.format.bits_per_sample,
                                                               subsampling_w=0,
