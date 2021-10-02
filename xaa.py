@@ -39,7 +39,7 @@ def Blur(clip, amount=0, planes=None):
 # They're used only to control behavior during recursion and changing them will cause a malfunction.
 
 def edi_rpow2_znedi3(clip, rfactorX, rfactorY, alignc=False, nsize=None, nns=None, qual=None, etype=None, pscrn=None, opt=None, int16_prescreener=None, int16_predictor=None, exp=None, f=True, turned=False):
-    core = vs.get_core()
+    core = vs.core
 
     # If alignc=true, always use field=1 for doubling the width
     # to maintain alignment of horizontally subsampled chroma.
@@ -75,7 +75,7 @@ def edi_rpow2_znedi3(clip, rfactorX, rfactorY, alignc=False, nsize=None, nns=Non
     
 
 def edi_rpow2_nnedi3cl(clip, rfactorX, rfactorY, alignc=False, nsize=None, nns=None, qual=None, etype=None, pscrn=None, f=True, turned=False):
-    core = vs.get_core()
+    core = vs.core
 
     # FIXME Not using the dw parameter because it behaves differently from the Avisynth version.
     
@@ -113,7 +113,7 @@ def edi_rpow2_nnedi3cl(clip, rfactorX, rfactorY, alignc=False, nsize=None, nns=N
 
 
 def edi_rpow2_eedi2(clip, rfactorX, rfactorY, alignc=False, mthresh=None, lthresh=None, vthresh=None, estr=None, dstr=None, maxd=None, map=None, nt=None, pp=None, f=True, turned=False):
-    core = vs.get_core()
+    core = vs.core
 
     field2 = int(f)
     
@@ -144,7 +144,7 @@ def edi_rpow2_eedi2(clip, rfactorX, rfactorY, alignc=False, mthresh=None, lthres
     
     
 def edi_rpow2_eedi3(clip, rfactorX, rfactorY, alignc=False, alpha=None, beta=None, gamma=None, nrad=None, mdis=None, hp=None, ucubic=None, cost3=None, vcheck=None, vthresh0=None, vthresh1=None, vthresh2=None, sclip=None, sclip_params=dict(), mclip=None, opt=None, f=True, turned=False, nnrep=False):
-    core = vs.get_core()
+    core = vs.core
 
     field2 = int(f)
     
@@ -238,7 +238,7 @@ def edi_rpow2(clip, rfactorX=2, rfactorY=None, edi="znedi3", cshift="", fwidth=N
               alpha=None, beta=None, gamma=None, nrad=None, mdis=None, hp=None, ucubic=None, cost3=None,
               vcheck=None, vthresh0=None, vthresh1=None, vthresh2=None, sclip="", sclip_params=dict(), mclip=None,
               mthresh=None, lthresh=None, vthresh=None, estr=None, dstr=None, maxd=None, map=None, nt=None, pp=None, nnrep=False):
-    core = vs.get_core()
+    core = vs.core
 
     
     def Default(param, value):
@@ -452,7 +452,7 @@ def edi_rpow2(clip, rfactorX=2, rfactorY=None, edi="znedi3", cshift="", fwidth=N
 
 
 def xaa(clip, ow=None, oh=None, ss=None, ssw=None, ssh=None, mode="sr SangNom", uscl=None, dscl="Spline36", csharp=None, cstr=None, mask=None, mtype=None, mthr=None, chroma=None, cplace="MPEG2", nns=1, eedimthr=0.0, eediA=0.2, eediB=0.25, eediG=20.0):
-    core = vs.get_core()
+    core = vs.core
     
     
     
@@ -473,7 +473,7 @@ def xaa(clip, ow=None, oh=None, ss=None, ssw=None, ssh=None, mode="sr SangNom", 
     
     # Resize the luma and the chroma separately in order to use different subpixel shifts.
     def ResizeSeparately(clip, width, height, src_left, src_top, kernel="Spline36", cplace="MPEG2"):
-        core = vs.get_core()
+        core = vs.core
 
         if not isinstance(clip, vs.VideoNode):
             raise ValueError("ResizeSeparately: 'clip' must be a clip.")
@@ -1499,7 +1499,7 @@ def xaa(clip, ow=None, oh=None, ss=None, ssw=None, ssh=None, mode="sr SangNom", 
 # maybe?
 
 def xaa_sr(clip, type="SangNom", passes=1, cplace="MPEG2", snaa=48, nns=1, alpha=0.2, beta=0.25, gamma=20.0, sclip="", mclip=None, f=1):
-    core = vs.get_core()
+    core = vs.core
 
     iw = clip.width
     ih = clip.height
@@ -1585,7 +1585,7 @@ def xaa_sr(clip, type="SangNom", passes=1, cplace="MPEG2", snaa=48, nns=1, alpha
 
 
 def xaa_dr(clip, type="znedi3", passes=1, cplace="MPEG2", snaa=48, nns=1, alpha=0.2, beta=0.25, gamma=20.0, sclip="", mclip=None):
-    core = vs.get_core()
+    core = vs.core
 
     iw = clip.width
     ih = clip.height
@@ -1673,7 +1673,7 @@ def xaa_dr(clip, type="znedi3", passes=1, cplace="MPEG2", snaa=48, nns=1, alpha=
     
     
 def xaa_di(clip, type="znedi3", passes=1, cplace="MPEG2", snaa=48, nns=1, alpha=0.2, beta=0.25, gamma=20.0, sclip="", mclip=None, f=1, dh=True):
-    core = vs.get_core()
+    core = vs.core
 
     # Translate the cplace parameter into values understood by the VapourSynth resizers.
     if cplace == "MPEG1":
