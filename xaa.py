@@ -847,8 +847,7 @@ def xaa(clip, ow=None, oh=None, ss=None, ssw=None, ssh=None, mode="sr SangNom", 
         
         
     # Remove frame properties that could confuse nnedi3 etc or the resizer.
-    clip = core.std.SetFrameProp(clip=clip, prop="_FieldBased", delete=True)
-    clip = core.std.SetFrameProp(clip=clip, prop="_Field", delete=True)
+    clip = core.std.RemoveFrameProps(clip=clip, props=["_FieldBased", "_Field"])
     
     
     ##### Scale the input clip to the supersampled resolution #####
@@ -1520,7 +1519,7 @@ def xaa_sr(clip, type="SangNom", passes=1, cplace="MPEG2", snaa=48, nns=1, alpha
     pad8 = type == "eedi2" or (type == "eedi3" and sclip not in ["", "SangNom", "znedi3", "nnedi3cl"])
     
     if pad8:
-        sf = clip.std.SeparateFields(tff=True).std.SetFrameProp(prop="_Field", delete=True)
+        sf = clip.std.SeparateFields(tff=True).std.RemoveFrameProps(props=["_Field"])
         if field == 1:
             sf = sf.std.SelectEvery(cycle=2, offsets=0)
         else:
@@ -1596,7 +1595,7 @@ def xaa_dr(clip, type="znedi3", passes=1, cplace="MPEG2", snaa=48, nns=1, alpha=
     pad8 = type == "eedi2" or (type == "eedi3" and sclip not in ["", "SangNom", "znedi3", "nnedi3cl"])
     
     if pad8:
-        sf = clip.std.SeparateFields(tff=True).std.SetFrameProp(prop="_Field", delete=True)
+        sf = clip.std.SeparateFields(tff=True).std.RemoveFrameProps(props=["_Field"])
         tf = sf.std.SelectEvery(cycle=2, offsets=0)
         bf = sf.std.SelectEvery(cycle=2, offsets=1)
     else:
@@ -1699,7 +1698,7 @@ def xaa_di(clip, type="znedi3", passes=1, cplace="MPEG2", snaa=48, nns=1, alpha=
     pad8 = type == "eedi2" or (type == "eedi3" and sclip not in ["", "SangNom", "znedi3", "nnedi3cl"])
     
     if pad8:
-        sf = clip.std.SeparateFields(tff=True).std.SetFrameProp(prop="_Field", delete=True)
+        sf = clip.std.SeparateFields(tff=True).std.RemoveFrameProps(props=["_Field"])
         if field == 1:
             sf = sf.std.SelectEvery(cycle=2, offsets=0)
         else:
