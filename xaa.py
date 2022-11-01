@@ -1436,11 +1436,11 @@ def xaa(clip, ow=None, oh=None, ss=None, ssw=None, ssh=None, mode="sr SangNom", 
     # 8-bit version of the rs2 clip for masking
     # TODO why can't you make the overlay in the same format as the input clip?
     # TODO okay, you can't do it in GRAY because it can't be green, but what's the reason to convert 422?
-    rs2_yv24 = rs2.resize.Bicubic(format=core.register_format(color_family=vs.YUV,
-                                                              sample_type=rs2.format.sample_type,
-                                                              bits_per_sample=rs2.format.bits_per_sample,
-                                                              subsampling_w=0,
-                                                              subsampling_h=0))
+    rs2_yv24 = rs2.resize.Bicubic(format=core.query_video_format(color_family=vs.YUV,
+                                                                 sample_type=rs2.format.sample_type,
+                                                                 bits_per_sample=rs2.format.bits_per_sample,
+                                                                 subsampling_w=0,
+                                                                 subsampling_h=0))
         
     if isGray(clip) or is422(clip):
         # TODO why doesn't YUV420P8 need this?
@@ -1453,12 +1453,12 @@ def xaa(clip, ow=None, oh=None, ss=None, ssw=None, ssh=None, mode="sr SangNom", 
     overlay = core.std.MaskedMerge(clipa=overlay, clipb=eover, mask=core.std.ShufflePlanes(clips=emask, planes=0, colorfamily=vs.GRAY), first_plane=True)
     
     if is422(clip):
-        overlay = overlay.resize.Bicubic(format=core.register_format(color_family=overlay.format.color_family,
-                                                                     sample_type=overlay.format.sample_type,
-                                                                     bits_per_sample=overlay.format.bits_per_sample,
-                                                                     subsampling_w=1,
-                                                                     subsampling_h=0))
-        
+        overlay = overlay.resize.Bicubic(format=core.query_video_format(color_family=overlay.format.color_family,
+                                                                        sample_type=overlay.format.sample_type,
+                                                                        bits_per_sample=overlay.format.bits_per_sample,
+                                                                        subsampling_w=1,
+                                                                        subsampling_h=0))
+
     
     if chroma == 0:
         merge_planes = [0]
