@@ -11,6 +11,8 @@ Usage
 =====
 ::
 
+    from xaa import xaa
+
     xaa(clip[, ow=clip.width, oh=clip.height, ss, ssw=ss, ssh=ss, mode="sr SangNom", uscl="Spline36", dscl="Spline36", csharp=0, cstr=-1.0, mask=1, mtype="TEdgeMask", mthr=8.0, chroma=0, cplace="MPEG2", nns=1, eedimthr=0.0, eediA=0.2, eediB=0.25, eediG=20.0])
 
 Parameters:
@@ -41,7 +43,7 @@ Parameters:
     *ssw*, *ssh*
         Allows separate control of the supersampled width and height.
         Overrides the *ss* parameter.
-        
+
         When specified as a float, they act as a multiplier like the
         *ss* parameter. When specified as an int, the given value is
         used for the supersampled width or height without rounding to
@@ -58,20 +60,20 @@ Parameters:
         AA Mode
             The antialiasing mode determines what method of
             antialiasing is used.
-            
+
             "sr" uses single rate deinterlacing, discarding one field
             of the frame and interpolating it from the remaining
             field.
-            
+
             "dr" uses double rate deinterlacing, interpolating
             full-height frames from both fields and then blending the
             two together.
-            
+
             "di" doubles the image height by interpolating every other
             line for the first pass, uses single rate deinterlacing
             for subsequent passes, and then downscales back to the
             original resolution.
-            
+
         Direction
             By setting the direction to "h" or "v", antialiasing can
             be applied only horizontally or vertically. If the
@@ -82,24 +84,24 @@ Parameters:
             The more passes used, the stronger the antialiasing will
             be. If the number of passes is omitted, it will default to
             1.
-            
+
             Possible values: 1 to 9.
 
         Type
             The type determines which deinterlacing plugin is used for
             antialiasing.
-            
+
             Possible values: SangNom, znedi3, nnedi3cl, eedi3, eedi2.
 
         Sclip
             The sclip option only applies when the aa type is set to
             eedi3 and will be undefined if omitted.
-            
+
             If specified, the given deinterlacer or resize kernel will
             be used to generate the sclip for eedi3.
-            
+
             See eedi3's documentation for more details.
-            
+
             Possible values: SangNom, znedi3, nnedi3cl, eedi2,
             Bilinear, Bicubic, Point, Lanczos, Spline16, Spline36.
 
@@ -109,11 +111,11 @@ Parameters:
 
         Equivalent settings:
             maa2:    ``xaa(mtype="Sobel", mthr=7)``
-            
+
             daa:     ``xaa(mode="drv znedi3", csharp=1, mask=0, chroma=1)``
-            
+
             Mrdaa:   ``xaa(mode="null", uscl="znedi3", csharp=2, cstr=1.0, mask=0, chroma=1)``
-            
+
             santiag: ``xaa(mode="di2 znedi3", mask=0, chroma=1)``
 
         Default: "sr SangNom".
@@ -136,10 +138,10 @@ Parameters:
 
     *csharp*
         0: No contra-sharpening.
-        
+
         1: Applies contra-sharpening before scaling to output
         resolution.
-        
+
         2: Applies contra-sharpening after scaling to output
         resolution.
 
@@ -149,7 +151,7 @@ Parameters:
 
     *cstr*
         Controls the strength of the contra-sharpening.
-        
+
         Any negative value uses RemoveGrain(mode=11) as in daa.
         A positive value uses Blur as in Mrdaa up to a max of 7.9.
         A value of 0 disables contra-sharpening and overrides the
@@ -160,13 +162,13 @@ Parameters:
 
     *mask*
         0: Processes the entire frame
-        
+
         1: Processes edges only
-        
+
         2: Processes everything except edges
 
         A negative value will show an overlay of the mask.
-        
+
         Default: 1, except when *mode* is "daa", "Mrdaa", "MrdaaLame",
         or "santiag" *mask* defaults to 0.
 
@@ -187,10 +189,10 @@ Parameters:
     *mthr*
         The threshold of the edge mask. Rounded to the nearest integer
         when *mtype* is "Sobel" or "Prewitt".
-        
+
         When *mask* is 1, lower values result in more edges getting
         antialiased.
-        
+
         When *mask* is 2, lower values result in fewer edges getting
         excluded.
 
@@ -199,33 +201,33 @@ Parameters:
 
     *chroma*
         0: Processes the luma plane only
-        
+
         1: Processes both the luma and chroma planes
-        
+
         2: Processes the chroma planes only
 
         Default: 0, except when *mode* is "daa", "Mrdaa", "MrdaaLame",
         or "santiag" *chroma* defaults to 1.
-        
+
     *cplace*
         Specifies the input's chroma placement. Options are "MPEG1"
         and "MPEG2".
-        
+
         Only applies to formats with subsampled chroma. Note that only
         formats with 4:2:0 subsampling should be able to have MPEG1
         chroma placement.
-    
+
         Default: "MPEG2".
-        
+
     *nns*
         znedi3's nns parameter for znedi3 and nnedi3cl antialiasing.
         Ranges from 0 to 4.
-        
+
         Higher values will provide better quality but will be slower.
         This setting doesn't affect upscaling with znedi3 or nnedi3cl.
-    
+
         Default: 1.
-        
+
     *eedimthr*
         A value greater than 0 creates an edge mask with the given
         value's threshold to be used with eedi3 antialiasing and
@@ -233,9 +235,9 @@ Parameters:
         masked edges, increasing eedi3's speed as the threshold is
         raised, but at the risk of excluding edges that need
         antialiasing.
-    
+
         Default: 0.0.
-        
+
     *eediA*, *eediB*, *eediG*
         eedi3's *alpha*, *beta*, and *gamma* parameters for eedi3
         antialiasing and upscaling.
@@ -243,11 +245,11 @@ Parameters:
         They adjust the balance between connecting lines and creating
         artifacts. *eediA* and *eediB* must be in the range 0 to 1 and
         their sum can't exceed 1.
-        
+
         See eedi3's documentation for more info.
-    
+
         Default: 0.2, 0.25, and 20.0.
-        
+
 
 Requirements
 ============
